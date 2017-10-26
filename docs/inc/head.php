@@ -17,8 +17,7 @@ if(!isset($bodyCssClass)) $bodyCssClass = '';
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo $seoTitle ?> - KenticoCloud.Deliver.PHP</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.4/foundation.css" />
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.css" integrity="" crossorigin="anonymous" />
   </head>
   <body class="<?php echo is_array($bodyCssClass) ? implode(' ', $bodyCssClass) : $bodyCssClass ?>">
 
