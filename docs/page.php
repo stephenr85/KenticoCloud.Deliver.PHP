@@ -1,10 +1,6 @@
 <?php require_once('inc/Site.php'); $site = Site::getInstance(); ?>
 <?php
-	$contentItem = $site->deliver()->getItem(array(
-		'system.codename'=>'home',
-		//'elements'=>'title,summary,post_date,teaser_image',
-		'depth'=>10
-	));
+	$contentItem = $site->deliver()->getItem('home');
 	//if(!$contentItem) 404;
 ?>
 <?php echo $site->inc('docs/inc/head', array('seoTitle'=>$contentItem->system->name)); ?>

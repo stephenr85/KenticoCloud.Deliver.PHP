@@ -73,6 +73,11 @@ class Client {
 	}
 
 	public function getItem($params){
+		if(is_string($params)){
+			$params = array(
+				'system.codename' => $params
+			);
+		}
 		$params['limit'] = 1;
 		$results = $this->getItems($params);
 
