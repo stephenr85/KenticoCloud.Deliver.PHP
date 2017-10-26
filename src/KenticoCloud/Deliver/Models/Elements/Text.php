@@ -3,10 +3,9 @@
 namespace KenticoCloud\Deliver\Models\Elements;
 
 
-class Text extends ContentItemElement {
+class Text extends Element {
 
 	public $name = null;
-	public $size = null;
-	public $url = null;
+	public $value = null;
 
 }

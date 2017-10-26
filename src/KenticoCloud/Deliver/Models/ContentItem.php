@@ -2,6 +2,7 @@
 
 namespace KenticoCloud\Deliver\Models;
 
+use KenticoCloud\Deliver\ContentElementTypesMap;
 
 class ContentItem extends Model {
 
@@ -17,10 +18,29 @@ class ContentItem extends Model {
 
 	}
 
-	public function getElementValue($name){
+	public function getElementAs($name, $type = null){
+		//ContentElementTypesMap
+		$element = is_string($name) ? $this->getElement($name) : $name;
+		if(!$type){
+			$type = ContentElementTypesMap::getTypeClass($element->type);
+		}
+		return $type::create($element);
+	}
+
+	public function getElement($name){
 		if(!$this->elements) return null;
-		foreach($this->elements as $element){
-			
+		foreach($this->elements as $key => $element){
+			if($key == $name || $name == $element->name){
+				return $element;
+			}
+		}
+		return null;
+	}
+
+	public function getElementValue($name){
+		$element = $this->getElement($name);
+		if(is_object($element)){
+			return $element->value;
 		}
 		return null;
 	}
@@ -44,6 +64,14 @@ class ContentItem extends Model {
 			$value = date($format, $value);
 		}
 		return $value;
+	}
+
+	public function getAssets($name){
+		$element = $this->getElement($name);
+		if(is_object($element) && $element->type == 'asset'){
+
+		}
+		return null;
 	}
 
 	
