@@ -9,4 +9,7 @@ class Element extends Model {
 	public $type = null;
 	public $value = null;
 
+	public function getValue(){
+		return $this->value;
+	}
 }
