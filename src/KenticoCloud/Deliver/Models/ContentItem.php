@@ -31,7 +31,7 @@ class ContentItem extends ContentModel {
 		//ContentElementTypesMap
 		$element = is_string($name) ? $this->getElement($name) : $name;
 		if(!$type){
-			$type = $client->getContentElementTypesMap()->getTypeClass($element->type);
+			$type = $this->client->getContentElementTypesMap()->getTypeClass($element->type);
 		}
 		return new $type($element, $this);
 	}
@@ -91,6 +91,7 @@ class ContentItem extends ContentModel {
 		}
 
 		foreach($this->elements as $key => $element){
+			$element = $this->getElementAs($key);
 			if($force || property_exists($instance, $key)){
 				$instance->$key = $element->getValue();
 			}
