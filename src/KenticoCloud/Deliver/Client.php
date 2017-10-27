@@ -14,11 +14,40 @@ class Client {
 	public $lastRequest = null;
 	public $mode = null;
 
-	public function __construct($projectID, $apiKey = null){
+	protected $contentTypesMap = null;
+	protected $contentElementTypesMap = null;
+
+	public function __construct($projectID, $apiKey = null, $contentTypesMap = null, $contentElementTypesMap = null){
 		$this->projectID = $projectID;
 		$this->apiKey = $apiKey;
 		$self = get_class($this);
 		$this->mode = $self::MODE_PUBLISHED;
+
+		if(!$contentTypesMap){
+			$contentTypesMap = new ContentTypesMap();
+		}
+		$this->setContentTypesMap($contentTypesMap);
+
+		if(!$contentElementTypesMap){
+			$contentElementTypesMap = new ContentElementTypesMap();
+		}
+		$this->setContentElementTypesMap($contentElementTypesMap);
+	}
+
+	public function getContentTypesMap(){
+		return $this->contentTypesMap;
+	}
+
+	public function setContentTypesMap($map){
+		$this->contentTypesMap = $map;
+	}
+
+	public function getContentElementTypesMap(){
+		return $this->contentElementTypesMap;
+	}
+
+	public function setContentElementTypesMap($map){
+		$this->contentElementTypesMap = $map;
 	}
 	
 	public function buildURL($endpoint, $query = NULL){
@@ -66,8 +95,7 @@ class Client {
 	public function getItems($params){
 		$request = $this->getRequest('items', $params);
 		$response = $this->send();
-		
-		$items = Models\ContentItems::create($response->body);
+		$items = new Models\ContentItems($response->body, $this);
 
 		return $items;
 	}
@@ -80,10 +108,10 @@ class Client {
 		}
 		$params['limit'] = 1;
 		$results = $this->getItems($params);
+		$items = $results->getItems();
+		if(is_null($items) || !count($items)) return null;
 
-		if(!isset($results->items) || !count($results->items)) return null;
-
-		$item = reset($results->items);
+		$item = reset($items);
 		return $item;
 	}
 

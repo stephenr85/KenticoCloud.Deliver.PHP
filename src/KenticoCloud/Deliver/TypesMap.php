@@ -4,20 +4,19 @@ namespace KenticoCloud\Deliver;
 
 class TypesMap {
 
-	public static $types = array(
+	public $defaultTypeClass = null;
+
+	protected $types = array(
 		
-	);
+	);	
 
-	public static $defaultTypeClass = null;
-
-	public static function setTypeClass($type, $class){
-		$self = get_called_class();
-		$self::$types[$type] = $class;
+	public function setTypeClass($type, $class){
+		$this->$types[$type] = $class;
 	}
 
-	public static function getTypeClass($type){
+	public function getTypeClass($type){
 		$self = get_called_class();
-		return isset($self::$types[$type]) ? $self::$types[$type] : $self::$defaultTypeClass;
+		return isset($this->types[$type]) ? $this->$types[$type] : $this->defaultTypeClass;
 	}
 
 }

@@ -4,27 +4,36 @@ namespace KenticoCloud\Deliver\Models;
 
 use KenticoCloud\Deliver\ContentElementTypesMap;
 
-class ContentItem extends Model {
+class ContentItem extends ContentModel {
 
 	public $system = null;
 	public $elements = null;
 
 	public function setSystem($system){
-		$this->system = ContentItemSystem::create($system);
+		$this->system = new ContentItemSystemAttributes($system);
 		return $this;
-	}
+	}	
 
-	public function getModularContent($huh){
-
+	public function getModularContent($name){
+		$element = $this->getElement($name);
+		if($element && $element->type == 'modular_content'){
+			$items = array();
+			$items = $this->client->getItems(array(
+				'system.codename[in]' => implode(',', $element->value),
+				'limit' => count($element->value)
+			));
+			return $items;
+		}
+		return null;
 	}
 
 	public function getElementAs($name, $type = null){
 		//ContentElementTypesMap
 		$element = is_string($name) ? $this->getElement($name) : $name;
 		if(!$type){
-			$type = ContentElementTypesMap::getTypeClass($element->type);
+			$type = $client->getContentElementTypesMap()->getTypeClass($element->type);
 		}
-		return $type::create($element);
+		return new $type($element, $this);
 	}
 
 	public function getElement($name){
@@ -69,7 +78,7 @@ class ContentItem extends Model {
 	public function getAssets($name){
 		$element = $this->getElement($name);
 		if(is_object($element) && $element->type == 'asset'){
-
+			// $assets = $as
 		}
 		return null;
 	}

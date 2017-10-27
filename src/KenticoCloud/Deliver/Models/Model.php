@@ -18,18 +18,17 @@ class Model {
 		
 		foreach($properties as $property=>$value){
 			$setMethod = 'set'.TextHelper::getInstance()->camelize($property);
-			call_user_func_array(array($this, $setMethod), array($value));
+			if(method_exists($this, $setMethod)){
+				call_user_func_array(array($this, $setMethod), array($value));
+			}else{
+				$this->$property = $value;
+			}
 		}
 		return $this;
 	}
 
-	static public function create($obj = null){
-		$class = get_called_class();
-		$instance = new $class();
-		if($obj){
-			$instance->populate($obj);
-		}
-		return $instance;
+	public function __construct($obj = null){
+		$this->populate($obj);
 	}
 
 	public function __call($val, $x) {
@@ -37,7 +36,7 @@ class Model {
 	    	$varname = substr($val, 3);
 
 	        if(property_exists($this, $dcvarname = TextHelper::getInstance()->decamelize($varname))) {
-		        return $this->$lcfvarname;
+		        return $this->$dcvarname;
 		    } else if(property_exists($this, $lcfvarname = lcfirst($varname))) {
 		        return $this->$lcfvarname;
 		    } else {

@@ -3,7 +3,7 @@
 namespace KenticoCloud\Deliver\Models;
 
 
-class ContentItemSystem extends Model {
+class ContentItemSystemAttributes extends Model {
 
 	public $id = null;
 	public $name = null;

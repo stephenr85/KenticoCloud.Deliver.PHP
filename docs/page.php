@@ -17,13 +17,10 @@
 
 			<div class="feature-article">
 				<?php 
-				$articleCodenames = $contentItem->getElementValue('articles');
-				$articleCodename = array_shift($articleCodenames);
-				$article = $site->deliver()->getItem(array(
-					'system.codename' => $articleCodename,
-					'elements' => 'title,summary,post_date,teaser_image'
-				));
-				$img = reset($article->getElementValue('teaser_image'));
+				$articles = $contentItem->getModularContent('articles')->getItems();
+				$article = array_shift($articles);
+				$teaser_image = $article->getElementValue('teaser_image');
+				$img = $teaser_image[0];
 				?>
 				<img src="<?php echo $img->url ?>">
 				<h2><?php echo $article->system->name ?></h2>
@@ -31,12 +28,9 @@
 			</div>
 
 			<div class="grid-x grid-padding-x">
-			<?php foreach($articleCodenames as $articleCodename){ 
-				$article = $site->deliver()->getItem(array(
-					'system.codename' => $articleCodename,
-					'elements' => 'title,summary,post_date,teaser_image'
-				));
-				$img = reset($article->getElementValue('teaser_image'));
+			<?php foreach($articles as $article){
+				$teaser_image = $article->getElementValue('teaser_image');
+				$img = $teaser_image[0];
 				echo '<!--' . $article . '-->';
 				?>
 				<div class="cell medium-3">
@@ -47,12 +41,10 @@
 			<?php } ?>
 			</div>
 
-			<?php 
-			$modularItem = $site->deliver()->getItem(array(
-				'system.codename' => reset($contentItem->getElementValue('our_story')),
-				//'elements' => 'title,summary,post_date,teaser_image'
-			));
-			$img = reset($modularItem->getElementValue('image'));
+			<?php
+			$modularItem = $contentItem->getModularContent('our_story')->first();
+			$teaser_image = $modularItem->getElementValue('image');
+			$img = $teaser_image[0];
 			echo '<!--' . $modularItem . '-->';
 			?>
 			<img src="<?php echo $img->url ?>" alt="<?php echo $img->description ?>">
