@@ -95,6 +95,7 @@ class ContentItem extends ContentModel {
 				$instance->$key = $element->getValue();
 			}
 		}
+		return $instance;
 	}
 
 	
