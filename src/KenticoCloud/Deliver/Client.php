@@ -17,7 +17,9 @@ class Client {
 	protected $contentTypesMap = null;
 	protected $contentElementTypesMap = null;
 
-	public function __construct($projectID, $apiKey = null, $contentTypesMap = null, $contentElementTypesMap = null){
+	protected $taxonomyTypesMap = null;
+
+	public function __construct($projectID, $apiKey = null, $contentTypesMap = null, $contentElementTypesMap = null, $taxonomyTypesMap = null){
 		$this->projectID = $projectID;
 		$this->apiKey = $apiKey;
 		$self = get_class($this);
@@ -32,6 +34,11 @@ class Client {
 			$contentElementTypesMap = new ContentElementTypesMap();
 		}
 		$this->setContentElementTypesMap($contentElementTypesMap);
+
+		if(!$taxonomyTypesMap){
+			$taxonomyTypesMap = new TaxonomyTypesMap();
+		}
+		$this->setTaxonomyTypesMap($taxonomyTypesMap);
 	}
 
 	public function getContentTypesMap(){
@@ -115,7 +122,59 @@ class Client {
 		return $item;
 	}
 
+	public function getTypes($params){
+		$request = $this->getRequest('types', $params);
+		$response = $this->send();
+		$types = new Models\ContentItems($response->body, $this);
+
+		return $types;
+	}
+
+	public function getType($params){
+		if(is_string($params)){
+			$params = array(
+				'system.codename' => $params
+			);
+		}
+		$params['limit'] = 1;
+		$results = $this->getTypes($params);
+		$types = $results->getItems();
+		if(is_null($types) || !count($types)) return null;
+
+		$type = reset($types);
+		return $type;
+	}
+
+	public function getTaxonomyTypesMap(){
+		return $this->taxonomyTypesMap;
+	}
+
+	public function setTaxonomyTypesMap($map){
+		$this->taxonomyTypesMap = $map;
+	}
 
 
+	public function getTaxonomies($params){
+		$request = $this->getRequest('taxonomies', $params);
+		$response = $this->send();
+		$items = new Models\Taxonomies($response->body, $this);
+
+		return $items;
+	}
+
+	public function getTaxonomy($params){
+		if(is_string($params)){
+			$params = array(
+				'system.codename' => $params
+			);
+		}
+		$params['limit'] = 1;
+		$results = $this->getTaxonomies($params);
+		$items = $results->getTaxonomies();
+		if(is_null($items) || !count($items)) return null;
+
+		$item = reset($items);
+		return $item;
+	}
 
 }

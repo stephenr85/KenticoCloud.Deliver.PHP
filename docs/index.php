@@ -28,6 +28,14 @@
 			<?php echo $deliver->getItems(array('system.type'=>'article', 'elements'=>'title,teaser_image,post_date,summary')) ?>
 			<p>...</p>
 
+			<h2 id="get-item">Get a taxonomy</h2>
+
+			<?php echo $deliver->getTaxonomy(array('system.codename'=>'personas')) ?>
+
+			<h2 id="get-item">Get taxonomies</h2>
+			<?php echo $deliver->getTaxonomies([]) ?>
+			<p>...</p>
+
 			<h2 id="map-types">Mapping content types</h2>
 			<p>...</p>
 
